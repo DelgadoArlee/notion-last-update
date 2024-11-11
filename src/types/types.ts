@@ -14,5 +14,6 @@ type NotionPageType = {
 };
 
 type NotionDbType = NotionPageType & {
+  title: string;
   pages: NotionPageType[];
 };

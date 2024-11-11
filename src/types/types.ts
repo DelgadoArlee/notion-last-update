@@ -13,8 +13,6 @@ type NotionPageType = {
   url: string;
 };
 
-type NotionDbType = {
-  id: string;
-  title: string;
+type NotionDbType = NotionPageType & {
   pages: NotionPageType[];
 };

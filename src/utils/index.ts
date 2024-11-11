@@ -1,6 +1,6 @@
 import { notionPages, notionDbs } from "./data";
 
-export function sortDBPages() {
+export function sortDBPages(notionDbs: NotionDbType[]): void {
   notionDbs.forEach((db) => {
     db.pages.sort(
       (a, b) =>
@@ -9,20 +9,20 @@ export function sortDBPages() {
   });
 }
 
-export function sortDatabases() {
-  notionDbs.sort(
+export function sortDatabases(notionDb: NotionDbType[]) {
+  notionDb.sort(
     (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   );
 }
 
-export function sortNotionPages() {
+export function sortNotionPages(notionPages: NotionPageType[]) {
   notionPages.sort(
     (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   );
 }
 
 export function sortAllNotionData() {
-  sortDBPages();
-  sortDatabases();
-  sortNotionPages();
+  sortDBPages(notionDbs);
+  sortDatabases(notionDbs);
+  sortNotionPages(notionPages);
 }

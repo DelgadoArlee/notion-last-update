@@ -1,4 +1,4 @@
-# Notion JS Integration: Page Last Updated Checker
+# Notion JS Integration: Notion Last Updated Checker
 
 ## Overview
 

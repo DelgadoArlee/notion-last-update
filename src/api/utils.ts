@@ -9,7 +9,7 @@ export const getNotionId = (
 ) => {
   const id = notionObject.id;
 
-  return { id };
+  return id;
 };
 
 export const getNotionDbTitle = async (db: GetDatabaseResponse) => {
@@ -26,54 +26,80 @@ export const getNotionDbTitle = async (db: GetDatabaseResponse) => {
   return title.text.content;
 };
 
-export const getNotionPageCreatedAt = (page: PageObjectResponse) => {
+export const getNotionPageCreatedAt = (
+  page: PageObjectResponse | DatabaseObjectResponse
+) => {
   const createdAt = page.created_time;
 
-  return { createdAt };
+  return createdAt;
 };
 
-export const getNotionPageLastEditedAt = (page: PageObjectResponse) => {
-  const lastEditedAt = page.last_edited_by;
+export const getNotionPageLastEditedAt = (
+  page: PageObjectResponse | DatabaseObjectResponse
+) => {
+  const lastEditedAt = page.last_edited_by.id;
 
-  return { lastEditedAt };
+  return lastEditedAt;
 };
 
-export const getNotionPageCreatedBy = (page: PageObjectResponse) => {
+export const getNotionPageCreatedBy = (
+  page: PageObjectResponse | DatabaseObjectResponse
+) => {
   const createdBy = page.created_by.id;
 
-  return { createdBy };
+  return createdBy;
 };
 
-export const getNotionPageLastEditedBy = (page: PageObjectResponse) => {
+export const getNotionPageLastEditedBy = (
+  page: PageObjectResponse | DatabaseObjectResponse
+) => {
   const lastEditedBy = page.last_edited_by.id;
 
-  return { lastEditedBy };
+  return lastEditedBy;
 };
 
-export const getNotionPageParent = (page: PageObjectResponse) => {
+export const getNotionPageParent = (
+  page: PageObjectResponse | DatabaseObjectResponse
+) => {
   const parent = page.parent;
 
-  return { parent };
+  return { type: parent.type, id: page.id };
 };
 
-export const getNotionPageUrl = (page: PageObjectResponse) => {
+export const getNotionPageUrl = (
+  page: PageObjectResponse | DatabaseObjectResponse
+) => {
   const url = page.url;
 
-  return { url };
+  return url;
 };
 
-export const getNotionPageSummary = (page: PageObjectResponse) => {
+export const getNotionPageType = (
+  notionObject: PageObjectResponse | DatabaseObjectResponse
+) => {
   return {
-    id: getNotionId(page),
-    createdAt: getNotionPageCreatedAt(page),
-    lastEditedAt: getNotionPageLastEditedAt(page),
-    createdBy: getNotionPageCreatedBy(page),
-    lastEditedBy: getNotionPageLastEditedBy(page),
-    parent: getNotionPageParent(page),
-    url: getNotionPageUrl(page),
+    id: getNotionId(notionObject),
+    createdAt: getNotionPageCreatedAt(notionObject),
+    lastEditedAt: getNotionPageLastEditedAt(notionObject),
+    createdBy: getNotionPageCreatedBy(notionObject),
+    lastEditedBy: getNotionPageLastEditedBy(notionObject),
+    parent: getNotionPageParent(notionObject),
+    url: getNotionPageUrl(notionObject),
   };
 };
 
-// export const getNotionDb = (db: DatabaseObjectResponse) => {
+export const getNotionDbPages = (pages: PageObjectResponse[]) =>
+  pages.map(getNotionPageType);
 
-// }
+export const getNotionDbType =
+  (pages: PageObjectResponse[]) => async (db: DatabaseObjectResponse) => {
+    const notionPages = getNotionDbPages(pages) as NotionPageType[];
+
+    const notionDbType: NotionDbType = {
+      ...getNotionPageType(db),
+      title: await getNotionDbTitle(db),
+      pages: notionPages,
+    };
+
+    return notionDbType;
+  };

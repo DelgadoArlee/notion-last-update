@@ -21,6 +21,53 @@ export function sortNotionPages(notionPages: NotionPageType[]) {
   );
 }
 
+export function filterPagesByLastEdited(
+  notionPages: NotionPageType[],
+  days: number
+): NotionPageType[] {
+  const currentDate = new Date(); 
+  const cutoffDate = new Date();
+  cutoffDate.setDate(currentDate.getDate() - days); 
+
+
+  return notionPages.filter((page) => {
+    const lastEditedDate = new Date(page.lastEditedAt);
+    return lastEditedDate >= cutoffDate; 
+  });
+}
+
+export function filterDatabasesByLastEdited(
+  notionDbs: NotionDbType[],
+  days: number
+): NotionDbType[] {
+  const currentDate = new Date();
+  const cutoffDate = new Date();
+  cutoffDate.setDate(currentDate.getDate() - days); 
+
+  return notionDbs.filter((db) => {
+
+    const recentPage = db.pages.some((page) => {
+      const lastEditedDate = new Date(page.lastEditedAt);
+      return lastEditedDate >= cutoffDate; 
+    });
+
+    return recentPage; 
+  });
+}
+export function filterDBPagesByLastEdited(
+  db: NotionDbType,
+  days: number
+): NotionPageType[] {
+  const currentDate = new Date(); 
+  const cutoffDate = new Date();
+  cutoffDate.setDate(currentDate.getDate() - days); 
+
+  return db.pages.filter((page) => {
+    const lastEditedDate = new Date(page.lastEditedAt);
+    return lastEditedDate >= cutoffDate; 
+  });
+}
+
 export function sortAllNotionData() {
   sortDBPages(notionDbs);
   sortDatabases(notionDbs);

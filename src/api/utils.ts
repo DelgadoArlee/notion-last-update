@@ -37,7 +37,7 @@ export const getNotionPageCreatedAt = (
 export const getNotionPageLastEditedAt = (
   page: PageObjectResponse | DatabaseObjectResponse
 ) => {
-  const lastEditedAt = page.last_edited_by.id;
+  const lastEditedAt = page.last_edited_time;
 
   return lastEditedAt;
 };

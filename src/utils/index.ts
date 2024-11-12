@@ -53,13 +53,20 @@ export function filterDatabasesByLastEdited(
 export function filterDBPagesByLastEdited(
   db: NotionDbType,
   days: number
-): NotionPageType[] {
+): NotionDbType {
   const currentDate = new Date();
   const cutoffDate = new Date();
   cutoffDate.setDate(currentDate.getDate() - days);
 
-  return db.pages.filter((page) => {
+  const filter = db.pages.filter((page) => {
     const lastEditedDate = new Date(page.lastEditedAt);
     return lastEditedDate >= cutoffDate;
   });
+
+  const result: NotionDbType = {
+    ...db,
+    pages: filter,
+  };
+
+  return result;
 }

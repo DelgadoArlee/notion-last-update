@@ -72,24 +72,26 @@ export function filterDBPagesByLastEdited(
 }
 export function filteredDBPagesbyPages(
   db: NotionDbType,
-  days: number
-): NotionPageType[] {
+  days: number | null | undefined
+): NotionDbType {
   const currentDate = new Date();
   const cutoffDate = new Date();
-  cutoffDate.setDate(currentDate.getDate() - days);
 
+  if (days != null && days !== 0) {
+    cutoffDate.setDate(currentDate.getDate() - days);
+  }
 
   const filteredPages = db.pages.filter((page) => {
     const lastEditedDate = new Date(page.lastEditedAt);
-    return lastEditedDate >= cutoffDate;
+    return days == null || days === 0 || lastEditedDate >= cutoffDate;
   });
-
 
   filteredPages.sort((a, b) => {
     const dateA = new Date(a.lastEditedAt).getTime();
     const dateB = new Date(b.lastEditedAt).getTime();
-    return dateA - dateB; 
+    return dateA - dateB;
   });
 
-  return filteredPages;
+  // Return the original db object with the sorted pages
+  return { ...db, pages: filteredPages };
 }
